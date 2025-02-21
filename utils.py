@@ -23,8 +23,8 @@ def get_object_size_in_ll(object_: dict) -> tuple[float, float]:
     return max_[0] - min_[0], max_[1] - min_[1]
 
 
-def get_object(json: dict) -> dict:
-    return json["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+def get_object(json: dict, index: int = 0) -> dict:
+    return json["response"]["GeoObjectCollection"]["featureMember"][index]["GeoObject"]
 
 
 def get_geocode_data(address_: str):
