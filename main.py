@@ -1,41 +1,16 @@
-from io import BytesIO
 from os import environ
 from sys import argv
 
 import requests
-from PIL import Image
 from dotenv import load_dotenv
+
+from utils import show_image, get_object_size_in_ll, get_object, get_geocode_data
 
 load_dotenv()
 
 
-def get_geocode_data(address_: str):
-    server = 'https://geocode-maps.yandex.ru/1.x'
-    params_ = {
-        'apikey': environ['GEOCODE_API_KEY'],
-        'geocode': address_,
-        'format': 'json'}
-    response = requests.get(server, params=params_)
-    if response.status_code != 200:
-        raise RuntimeError(f'Ошибка при выполнении запроса\n'
-                           f'HTTP-code: {response.status_code}\n'
-                           f'ERROR: {response.text}')
-    return response.json()
-
-
 def get_coord_from_object(json: dict) -> tuple[float, ...] | tuple[float, float]:
     return tuple(map(float, json['Point']['pos'].split()))
-
-
-def get_object(json: dict) -> dict:
-    return json["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
-
-
-def get_object_size_in_ll(object_: dict) -> tuple[float, float]:
-    coords = object_['boundedBy']['Envelope']
-    min_ = tuple(map(float, coords['lowerCorner'].split()))
-    max_ = tuple(map(float, coords['upperCorner'].split()))
-    return max_[0] - min_[0], max_[1] - min_[1]
 
 
 def get_image_from_coord(coord: tuple[float, float], spn_: tuple[float, float], **kwargs) -> bytes:
@@ -51,12 +26,6 @@ def get_image_from_coord(coord: tuple[float, float], spn_: tuple[float, float], 
                            f"HTTP-code: {response.status_code}\n"
                            f"ERROR: {response.text}")
     return response.content
-
-
-def show_image(content: bytes) -> None:
-    image = BytesIO(content)
-    im = Image.open(image)
-    im.show()
 
 
 if __name__ == '__main__':
