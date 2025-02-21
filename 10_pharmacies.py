@@ -15,7 +15,12 @@ load_dotenv()
 COLORS = ['pm2gnl', 'pm2bll', 'pm2grl']
 if __name__ == '__main__':
     address = ' '.join(argv[1:])
-    coord = get_coord_from_object(get_object(get_geocode_data(address)))
+    params = {
+        'apikey': environ['GEOCODE_API_KEY'],
+        'geocode': address,
+        'format': 'json'
+    }
+    coord = get_coord_from_object(get_object(get_geocode_data(**params)))
     params = {
         'apikey': environ['SEARCH_MAPS_API_KEY'],
         'lang': 'ru_RU',

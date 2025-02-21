@@ -1,6 +1,5 @@
 import math
 from io import BytesIO
-from os import environ
 
 import requests
 from PIL import Image
@@ -27,13 +26,9 @@ def get_object(json: dict, index: int = 0) -> dict:
     return json["response"]["GeoObjectCollection"]["featureMember"][index]["GeoObject"]
 
 
-def get_geocode_data(address_: str):
+def get_geocode_data(**params):
     server = 'https://geocode-maps.yandex.ru/1.x'
-    params_ = {
-        'apikey': environ['GEOCODE_API_KEY'],
-        'geocode': address_,
-        'format': 'json'}
-    response = requests.get(server, params=params_)
+    response = requests.get(server, params=params)
     if response.status_code != 200:
         raise RuntimeError(f'Ошибка при выполнении запроса\n'
                            f'HTTP-code: {response.status_code}\n'

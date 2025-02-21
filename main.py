@@ -13,7 +13,12 @@ load_dotenv()
 
 if __name__ == '__main__':
     address = ' '.join(argv[1:])
-    obj = get_object(get_geocode_data(address))
+    params = {
+        'apikey': environ['GEOCODE_API_KEY'],
+        'geocode': address,
+        'format': 'json'
+    }
+    obj = get_object(get_geocode_data(**params))
     address_coord = get_coord_from_object(obj)
     spn = get_object_size_in_ll(obj)
     params = {'ll': ','.join(map(str, address_coord)),

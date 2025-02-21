@@ -1,24 +1,32 @@
+from os import environ
 from sys import argv
 
 from dotenv import load_dotenv
+
 from utils import (get_object,
                    get_geocode_data,
                    get_coord_from_object,
                    get_search_api_data,
-                   environ, get_distance,
+                   get_distance,
                    get_image_from_coord,
                    show_image)
 
 if __name__ == '__main__':
     load_dotenv()
     address = ' '.join(argv[1:])
-    coord: tuple[float, float] = get_coord_from_object(get_object(get_geocode_data(address)))
+    params = {
+        'apikey': environ['GEOCODE_API_KEY'],
+        'geocode': address,
+        'format': 'json'
+    }
+    coord: tuple[float, float] = get_coord_from_object(get_object(get_geocode_data(**params)))
     params = {'text': 'аптека',
               'll': ','.join(map(str, coord)),
               'type': 'biz',
               'lang': 'ru_RU',
               'apikey': environ['SEARCH_MAPS_API_KEY']}
     data = get_search_api_data(**params)
+
     pharmacies: list = data['features']
     pharmacies = sorted(pharmacies, key=lambda x: get_distance(coord, tuple(x['geometry']['coordinates'])))
     pharmacy = pharmacies[0]
