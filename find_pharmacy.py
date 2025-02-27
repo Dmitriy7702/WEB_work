@@ -24,7 +24,8 @@ if __name__ == '__main__':
               'll': ','.join(map(str, coord)),
               'type': 'biz',
               'lang': 'ru_RU',
-              'apikey': environ['SEARCH_MAPS_API_KEY']}
+              'apikey': environ['SEARCH_MAPS_API_KEY'],
+              'results': 43}
     data = get_search_api_data(**params)
 
     pharmacies: list = data['features']
@@ -40,5 +41,5 @@ if __name__ == '__main__':
     company_data = pharmacy['properties']['CompanyMetaData']
     print(f"Адрес: {company_data['address']}\n"
           f"Название: {company_data['name']}\n"
-          f"Время работы: {company_data['Hours']['text']}\n"
+          f"Время работы: {company_data.get('Hours', dict()).get('text')}\n"
           f"Расстояние до заведения: {round(get_distance(coord, pharmacy_coord))} м")
