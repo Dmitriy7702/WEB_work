@@ -1,13 +1,12 @@
-from os import getenv
 from secrets import choice
 from sys import argv, exit
 from typing import Sequence
 
 from PyQt6.QtGui import QImage, QPixmap, QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import QMainWindow, QApplication
-from dotenv import load_dotenv
 
 from GuessTheCityGameWindowUI import Ui_MainWindow
+from keys import *
 from utils import get_coord_from_object, get_object_size_in_ll, get_object, get_geocode_data, get_image_from_coord
 
 
@@ -37,16 +36,18 @@ class GuessTheCityGameWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
-    load_dotenv()
+    SEARCH = SEARCH_MAPS_API_KEY
+    MAP = STATIC_MAPS_API_KEY
+    GEOCODE = GEOCODE_API_KEY
     CITIES = ['Краснодар', 'Лондон', 'Буэнос-Айрес', 'Мехико', 'Волгоград', 'Канберра', 'Токио']
     params_static_maps = {
-        'apikey': getenv('STATIC_MAPS_API_KEY'),
+        'apikey': MAP,
 
     }
     images: list[bytes] = list()
     for city in CITIES:
         params = {
-            'apikey': getenv('GEOCODE_API_KEY'),
+            'apikey': GEOCODE,
             'geocode': city,
             'format': 'json'
         }
@@ -55,7 +56,7 @@ if __name__ == '__main__':
         coord: tuple[float, float] = get_coord_from_object(object_)
         spn = tuple(map(lambda x: 0.07 * x, get_object_size_in_ll(object_)))
         params_ = {
-            'apikey': getenv('STATIC_MAPS_API_KEY'),
+            'apikey': STATIC_MAPS_API_KEY,
             'll': ','.join(map(str, coord)),
             'spn': ','.join(map(str, spn)),
             'size': '650,450'

@@ -1,8 +1,6 @@
-from os import environ
 from sys import argv
 
-from dotenv import load_dotenv
-
+from keys import *
 from utils import (get_object,
                    get_coord_from_object,
                    get_geocode_data,
@@ -10,19 +8,26 @@ from utils import (get_object,
                    get_image_from_coord,
                    show_image)
 
-load_dotenv()
+# from dotenv import load_dotenv
 
+# load_dotenv()
+
+GEOCODE = GEOCODE_API_KEY
+SEARCH = SEARCH_MAPS_API_KEY
+MAPS = STATIC_MAPS_API_KEY
 COLORS = ['pm2gnl', 'pm2bll', 'pm2grl']
 if __name__ == '__main__':
     address = ' '.join(argv[1:])
+
     params = {
-        'apikey': environ['GEOCODE_API_KEY'],
+        'apikey': GEOCODE,
         'geocode': address,
         'format': 'json'
     }
     coord = get_coord_from_object(get_object(get_geocode_data(**params)))
+
     params = {
-        'apikey': environ['SEARCH_MAPS_API_KEY'],
+        'apikey': SEARCH,
         'lang': 'ru_RU',
         'type': 'biz',
         'text': 'аптека',
@@ -44,7 +49,7 @@ if __name__ == '__main__':
 
     params = {
         'pt': '~'.join(points),
-        'apikey': environ['STATIC_MAPS_API_KEY']
+        'apikey': MAPS
     }
 
     image = get_image_from_coord(**params)

@@ -1,16 +1,17 @@
-from os import getenv
-from sys import argv
 
-from dotenv import load_dotenv
+from sys import argv
+from keys import *
+# from dotenv import load_dotenv
 
 from utils import get_geocode_data, get_coord_from_object, get_object
 
 if __name__ == '__main__':
-    load_dotenv()
+    # load_dotenv()
+    GEOCODE = GEOCODE_API_KEY
     address = ' '.join(argv[1:])
     params = {
         'geocode': address,
-        'apikey': getenv('GEOCODE_API_KEY'),
+        'apikey': GEOCODE,
         'format': 'json'
     }
     coord = get_coord_from_object(get_object(get_geocode_data(**params)))
